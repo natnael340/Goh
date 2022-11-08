@@ -12,8 +12,8 @@ const { user, userLogin } = db.init();
 router = userRouter(user, userLogin);
 
 app.get('/', async (req, res) => {
-  const malik = user.build({ username: 'malik', firstName: 'Natnael', middleName: 'Tilahun', lastName: 'Hailu' });
-  res.json(malik)
+  const users = await userLogin.findAll();
+  res.json(users)
 })
 app.use('/api/v1/user', router)
 app.listen(port, () => {

@@ -121,7 +121,7 @@ const db = {
     houses.belongsTo(user);
     sequelize.sync();
 
-    return { user, houses }
+    return { user, houses, userLogin, blockedUser }
   }
 }
 
