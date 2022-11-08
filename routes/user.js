@@ -3,6 +3,7 @@ const router = express.Router();
 var bcrypt = require('bcryptjs');
 var salt = bcrypt.genSaltSync(10);
 
+
 const userRouter = (user, userLogin) => {
     router.post("/signup", async (req, res) => {
         const email = req.body?.email;
