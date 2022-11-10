@@ -31,6 +31,14 @@ const userRouter = (user, userLogin) => {
         message: "Password length must be greater than 8"
       })
     else {
+      const oldUser = await userLogin.findOne({where : {
+        email
+      }})
+      if(oldUser){
+        return res.status(400).json({
+        message: "Email already used"
+      })
+      }
       const newUser = await userLogin.create({
         email,
         password: bcrypt.hashSync(password, salt)

@@ -56,18 +56,21 @@ const db = {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          is: /^[a-zA-Z0-9]{0,64}$/g
+          is: /^[a-zA-Z0-9\ ]{0,64}$/g
         }
       },
       description: {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-          is: /^[a-zA-Z0-9]{0,255}$/g
+          is: /^[a-zA-Z0-9\ ]{0,255}$/g
         }
       },
       location: {
         type: DataTypes.STRING,
+      },
+      locationType: {
+        type: DataTypes.ENUM("map", "raw")
       },
       size: {
         type: DataTypes.STRING

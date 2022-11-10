@@ -9,7 +9,7 @@ const userRouter = (user, userLogin) => {
     const middleName = req.body?.mname;
     const lastName = req.body?.lname;
     const username = req.body?.username;
-    console.log(/^[0-9a-z]{3,32}$/g.test(username));
+    
     if (!/^[0-9a-z]{3,32}$/g.test(username))
       return res.status(400).json({
         message: "Invalid username"
@@ -27,6 +27,14 @@ const userRouter = (user, userLogin) => {
         message: "Invalid middle name"
       })
     else {
+      const oldUser = await user.findOne({where: {
+        username
+      }})
+      if(oldUser){
+        return res.status(400).json({
+        message: "Username taken"
+      })
+      }
       const newUser = await user.create({
         firstName,
         middleName,
@@ -46,7 +54,6 @@ const userRouter = (user, userLogin) => {
     }
   });
   router.get("/info", authenticate, async (req, res) => {
-    console.log(req.user.uuid)
     const info = await user.findOne({
       include: { model: userLogin, required: true }, where: {
         uuid: req.user.uuid

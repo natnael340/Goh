@@ -6,6 +6,7 @@ var bcrypt = require('bcryptjs');
 var salt = bcrypt.genSaltSync(10);
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
+const houseRouter = require('./routes/houses');
 
 const corsConfig = {
   credentials: true,
@@ -17,10 +18,11 @@ app.use(bodyParser.json())
 
 const port = 8080
 const db = require('./models/models.js')
-const { user, userLogin } = db.init();
+const { user, userLogin, houses } = db.init();
 
 const auth = authRouter(user, userLogin);
 const userRoute = userRouter(user, userLogin);
+const houseRoute = houseRouter(houses);
 
 app.get('/', async (req, res) => {
   const newUser = await user.create({username: "malik", firstName: "malik", lastName: "malik", middleName: "malik"})
@@ -30,6 +32,7 @@ app.get('/', async (req, res) => {
 })
 app.use('/api/v1/auth', auth)
 app.use('/api/v1/user', userRoute)
+app.use('/api/v1/house', houseRoute)
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
