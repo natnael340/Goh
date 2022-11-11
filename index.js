@@ -18,11 +18,11 @@ app.use(bodyParser.json())
 
 const port = 8080
 const db = require('./models/models.js')
-const { user, userLogin, houses } = db.init();
+const { user, userLogin, houses, favHouse } = db.init();
 
 const auth = authRouter(user, userLogin);
 const userRoute = userRouter(user, userLogin);
-const houseRoute = houseRouter(houses);
+const houseRoute = houseRouter(houses, favHouse);
 
 app.get('/', async (req, res) => {
   const newUser = await user.create({username: "malik", firstName: "malik", lastName: "malik", middleName: "malik"})
