@@ -160,38 +160,39 @@ const houseRouter = (houses, favHouse) => {
         required: true,
         where: {
           UserUuid: req.user.uuid
-        }
-      }
+        },
+        attributes: []
+      },
     })
     return res.status(200).json(favHouses);
   })
   router.post("/fav", authenticate, async (req, res) => {
-    const HousesId = req.body?.id || null;
-    if(!HousesId) return res.status(400).json({message: "id parameter is required"})
+    const HouseId = req.body?.id || null;
+    if(!HouseId) return res.status(400).json({message: "id parameter is required"})
     const house = await houses.findOne({
       where: {
-        id: HousesId
+        id: HouseId
       } 
     });
     if(!house) return res.status(404).json({message: "No such home exists!!"})
     await favHouse.create({
-      HousesId,
+      HouseId,
       UserUuid: req.user.uuid
     });
     return res.status(200).json({message: "House added to favourite list"});
   })
   router.delete("/fav/:id", authenticate, async (req, res) => {
-    const HousesId = req.params?.id || null;
-    if(!HousesId) return res.status(400).json({message: "id parameter is required"})
+    const HouseId = req.params?.id || null;
+    if(!HouseId) return res.status(400).json({message: "id parameter is required"})
     const house = await houses.findOne({
       where: {
-        id: HousesId
+        id: HouseId
       } 
     });
     if(!house) return res.status(404).json({message: "No such home exists!!"})
     await favHouse.destroy({
       where: {
-        HousesId,
+        HouseId,
         UserUuid: req.user.uuid
       }
     });

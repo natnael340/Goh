@@ -184,18 +184,27 @@ const db = {
     
     user.hasOne(documents);
     documents.belongsTo(user);
+    
     user.hasMany(address);
     address.belongsTo(user);
-    user.belongsToMany(houses, {through: favHouse});
-    houses.belongsToMany(user, {through: favHouse});
+    
+    user.hasMany(favHouse);
+    favHouse.belongsTo(user);
+    houses.hasMany(favHouse);
+    favHouse.belongsTo(houses)
+    
     user.hasOne(blockedUser);
     blockedUser.belongsTo(user);
+    
     user.hasOne(userLogin);
     userLogin.belongsTo(user);
+    
     user.hasMany(houses);
     houses.belongsTo(user);
+    
     houses.hasMany(housePhotos);
     housePhotos.belongsTo(houses);
+    
     sequelize.sync();
 
     return { user, houses, userLogin, blockedUser, favHouse }
