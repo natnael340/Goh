@@ -1,6 +1,6 @@
-const { Sequelize, Op, Model, DataTypes } = require('sequelize')
+const { Sequelize, Op, Model, DataTypes } = require("sequelize");
 
-const sequelize = new Sequelize("sqlite::memory:")
+const sequelize = new Sequelize("sqlite::memory:");
 
 const db = {
   init: () => {
@@ -9,38 +9,38 @@ const db = {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
       },
       username: {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false,
         validate: {
-          is: /^[0-9a-z]{3,32}$/g
-        }
+          is: /^[0-9a-z]{3,32}$/g,
+        },
       },
       firstName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          is: /^[a-zA-Z]{4,32}$/g
-        }
+          is: /^[a-zA-Z]{4,32}$/g,
+        },
       },
       profile: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       middleName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          is: /^[a-zA-Z]{4,32}$/g
-        }
+          is: /^[a-zA-Z]{4,32}$/g,
+        },
       },
       lastName: {
         type: DataTypes.STRING,
         validate: {
-          is: /^[a-zA-Z]{4,32}$/g
-        }
+          is: /^[a-zA-Z]{4,32}$/g,
+        },
       },
       active: {
         type: DataTypes.BOOLEAN,
@@ -50,21 +50,21 @@ const db = {
       mfa: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: false
+        defaultValue: false,
       },
       phoneNumber: {
         type: DataTypes.STRING,
         validate: {
-          is: /^[0-9\+]{10,20}$/g
-        }
+          is: /^[0-9\+]{10,20}$/g,
+        },
       },
       role: {
         type: DataTypes.ENUM("tenant", "landlord", "admin"),
       },
       verified: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
-      }
+        defaultValue: false,
+      },
     });
     const verficationCode = sequelize.define("VerficationCode", {
       code: {
@@ -72,30 +72,30 @@ const db = {
       },
       issuedAt: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
       },
       expiresAt: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       type: {
-        type: DataTypes.ENUM("email", "password", "mfa")
-      }
-    })
+        type: DataTypes.ENUM("email", "password", "mfa"),
+      },
+    });
     const documents = sequelize.define("Documents", {
       idCard: {
         type: DataTypes.STRING,
       },
       verified: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       message: {
         type: DataTypes.STRING,
-      }
-    })
+      },
+    });
     const address = sequelize.define("Address", {
       title: {
-        type: DataTypes.ENUM("Home", "Work")
+        type: DataTypes.ENUM("Home", "Work"),
       },
       country: {
         type: DataTypes.STRING,
@@ -114,31 +114,31 @@ const db = {
       },
       gpsLoc: {
         type: DataTypes.STRING,
-      }
-    })
+      },
+    });
     const houses = sequelize.define("Houses", {
       title: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          is: /^[a-zA-Z0-9\ ]{0,64}$/g
-        }
+          is: /^[a-zA-Z0-9\ ]{0,64}$/g,
+        },
       },
       description: {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-          is: /^[a-zA-Z0-9\ ]{0,255}$/g
-        }
+          is: /^[a-zA-Z0-9\ ]{0,255}$/g,
+        },
       },
       location: {
         type: DataTypes.STRING,
       },
       locationType: {
-        type: DataTypes.ENUM("map", "raw")
+        type: DataTypes.ENUM("map", "raw"),
       },
       size: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       rooms: {
         type: DataTypes.INTEGER,
@@ -147,24 +147,29 @@ const db = {
         type: DataTypes.INTEGER,
       },
       category: {
-        type: DataTypes.ENUM("Apartment", "Condominium", "Shared Area", "Standalone"),
+        type: DataTypes.ENUM(
+          "Apartment",
+          "Condominium",
+          "Shared Area",
+          "Standalone"
+        ),
       },
       contactName: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       contactEmail: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       contactPhoneNumber: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       status: {
-        type: DataTypes.ENUM("available", "occupied", "pending")
+        type: DataTypes.ENUM("available", "occupied", "pending"),
       },
       rent: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
-      }
+      },
     });
     const blockedUser = sequelize.define("BlockedUser", {
       blockedFrom: {
@@ -172,14 +177,14 @@ const db = {
       },
       blockedTo: {
         type: DataTypes.DATE,
-      }
-    })
+      },
+    });
     const userLogin = sequelize.define("UserLogin", {
       email: {
         type: DataTypes.STRING,
         validate: {
-          is: /^[a-z0-9]{1,32}\@[a-z]{2,32}\.[a-z]{1,6}$/g
-        }
+          is: /^[<>]{1,32}\@[a-z]{2,32}\.[a-z]{1,6}$/g,
+        },
       },
       password: {
         type: DataTypes.STRING,
@@ -189,23 +194,44 @@ const db = {
         defaultValue: 0,
       },
       loginBlockedTime: {
-        type: DataTypes.DATE
-      }
-    })
+        type: DataTypes.DATE,
+      },
+    });
     const favHouse = sequelize.define("FavouriteHouse");
     const housePhotos = sequelize.define("HousePhotos", {
       order: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       fileName: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       type: {
         type: DataTypes.ENUM("main", "default"),
-        defaultValue: "default"
-      }
+        defaultValue: "default",
+      },
+    });
+    const comments = sequelize.define("Comments", {
+      comments: {
+        type: DataTypes.STRING,
+        validate: {
+          is: /^((?![<>]).)*$/gm,
+        },
+      },
     });
 
+    const tour = sequelize.define("Tour", {
+      tourDate: {
+        type: DataTypes.DATE,
+      },
+      comment: {
+        type: DataTypes.STRING,
+        validate: {
+          is: /^((?![<>]).)*$/gm,
+        },
+      },
+    });
+    const checkout = sequelize.define("Checkout");
+    const booking = sequelize.define("Booking");
 
     user.hasOne(documents);
     documents.belongsTo(user);
@@ -216,7 +242,7 @@ const db = {
     user.hasMany(favHouse);
     favHouse.belongsTo(user);
     houses.hasMany(favHouse);
-    favHouse.belongsTo(houses)
+    favHouse.belongsTo(houses);
 
     user.hasOne(blockedUser);
     blockedUser.belongsTo(user);
@@ -233,11 +259,30 @@ const db = {
     houses.hasMany(housePhotos);
     housePhotos.belongsTo(houses);
 
+    user.hasMany(comments);
+    comments.belongsTo(user);
+    houses.hasMany(comments);
+    comments.belongsTo(houses);
+
+    user.hasMany(tour);
+    tour.belongsTo(user);
+    houses.hasMany(tour);
+    tour.belongsTo(houses);
+
+    user.hasMany(checkout);
+    checkout.belongsTo(user);
+    houses.hasMany(checkout);
+    checkout.belongsTo(houses);
+
+    user.hasMany(booking);
+    booking.belongsTo(user);
+    houses.hasMany(booking);
+    booking.belongsTo(houses);
+
     sequelize.sync();
 
-    return { user, houses, userLogin, blockedUser, favHouse, verficationCode }
-  }
-}
+    return { user, houses, userLogin, blockedUser, favHouse, verficationCode };
+  },
+};
 
-
-module.exports = db
+module.exports = db;
