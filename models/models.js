@@ -52,6 +52,12 @@ const db = {
         allowNull: false,
         defaultValue: false
       },
+      phoneNumber: {
+        type: DataTypes.STRING,
+        validate: {
+          is: /^[0-9\+]{10,20}$/g
+        }
+      },
       role: {
         type: DataTypes.ENUM("tenant", "landlord", "admin"),
       },
@@ -60,7 +66,22 @@ const db = {
         defaultValue: false
       }
     });
-    const documents = sequelize.define("Documents",{
+    const verficationCode = sequelize.define("VerficationCode", {
+      code: {
+        type: DataTypes.STRING,
+      },
+      issuedAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+      },
+      expiresAt: {
+        type: DataTypes.DATE
+      },
+      type: {
+        type: DataTypes.ENUM("email", "password", "mfa")
+      }
+    })
+    const documents = sequelize.define("Documents", {
       idCard: {
         type: DataTypes.STRING,
       },
@@ -126,7 +147,7 @@ const db = {
         type: DataTypes.INTEGER,
       },
       category: {
-        type: DataTypes.ENUM("Apartment", "Condominium", "Shared Area", "Full Area"),
+        type: DataTypes.ENUM("Apartment", "Condominium", "Shared Area", "Standalone"),
       },
       contactName: {
         type: DataTypes.STRING
@@ -139,6 +160,10 @@ const db = {
       },
       status: {
         type: DataTypes.ENUM("available", "occupied", "pending")
+      },
+      rent: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
       }
     });
     const blockedUser = sequelize.define("BlockedUser", {
@@ -165,7 +190,7 @@ const db = {
       },
       loginBlockedTime: {
         type: DataTypes.DATE
-      } 
+      }
     })
     const favHouse = sequelize.define("FavouriteHouse");
     const housePhotos = sequelize.define("HousePhotos", {
@@ -181,33 +206,36 @@ const db = {
       }
     });
 
-    
+
     user.hasOne(documents);
     documents.belongsTo(user);
-    
+
     user.hasMany(address);
     address.belongsTo(user);
-    
+
     user.hasMany(favHouse);
     favHouse.belongsTo(user);
     houses.hasMany(favHouse);
     favHouse.belongsTo(houses)
-    
+
     user.hasOne(blockedUser);
     blockedUser.belongsTo(user);
-    
+
     user.hasOne(userLogin);
     userLogin.belongsTo(user);
-    
+
+    user.hasOne(verficationCode);
+    verficationCode.belongsTo(user);
+
     user.hasMany(houses);
     houses.belongsTo(user);
-    
+
     houses.hasMany(housePhotos);
     housePhotos.belongsTo(houses);
-    
+
     sequelize.sync();
 
-    return { user, houses, userLogin, blockedUser, favHouse }
+    return { user, houses, userLogin, blockedUser, favHouse, verficationCode }
   }
 }
 

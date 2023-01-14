@@ -61,6 +61,39 @@ const userRouter = (user, userLogin) => {
     })
     return res.status(200).json(info)
   });
+  router.get("/mfa", authenticate, async (req, res) => {
+    const info = await user.findOne({
+      where: {
+        uuid: req.user.uuid
+      },
+      attributes: ['mfa']
+    })
+    return res.status(200).json({enabled: info.mfa})
+  });
+  router.post("/mfa", authenticate, async (req, res) => {
+    const info = await user.findOne({
+      where: {
+        uuid: req.user.uuid
+      }
+    })
+    if(!info.phoneNumber){
+      return res.status(400).json({message: "Phone Number must be added"})
+    }
+    await info.update({mfa: true})
+    return res.status(200).json({enabled: info.mfa})
+  });
+  router.delete("/mfa", authenticate, async (req, res) => {
+    const info = await user.findOne({
+      where: {
+        uuid: req.user.uuid
+      }
+    })
+    if(!info.phoneNumber){
+      return res.status(400).json({message: "Phone Number must be added"})
+    }
+    await info.update({mfa: false})
+    return res.status(200).json({enabled: info.mfa})
+  });
   return router;
 }
 
